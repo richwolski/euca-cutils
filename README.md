@@ -1,4 +1,4 @@
-c-utils
+euca-cutils
 =======
 
 basic C utilities to help calm the madness
