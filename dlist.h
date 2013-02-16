@@ -1,3 +1,4 @@
+/*
 # Software License Agreement (BSD License)
 #
 # Copyright (c) 2009-2012, Eucalyptus Systems, Inc.
@@ -27,6 +28,7 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+*/
 #ifndef DLIST_2_H
 #define DLIST_2_H
 
