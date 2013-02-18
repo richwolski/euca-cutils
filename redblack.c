@@ -1270,31 +1270,31 @@ void RBPrintNode(RB *node)
 	switch(node->key.type)
 	{
 		case K_INT:
-	printf("n: 0x%x, key: %d color: %d, l: 0x%x, r: 0x%x p: 0x%x\n",
-		node,
+	printf("n: 0x%lx, key: %d color: %d, l: 0x%lx, r: 0x%lx p: 0x%lx\n",
+		(unsigned long)node,
 		node->key.key.i,
 		node->color,
-		node->left,
-		node->right,
-		node->parent);
+		(unsigned long)node->left,
+		(unsigned long)node->right,
+		(unsigned long)node->parent);
 		break;
 		case K_DOUBLE:
-	printf("n: 0x%x, key: %f color: %d, l: 0x%x, r: 0x%x p: 0x%x\n",
-		node,
+	printf("n: 0x%lx, key: %f color: %d, l: 0x%lx, r: 0x%lx p: 0x%lx\n",
+		(unsigned long)node,
 		node->key.key.d,
 		node->color,
-		node->left,
-		node->right,
-		node->parent);
+		(unsigned long)node->left,
+		(unsigned long)node->right,
+		(unsigned long)node->parent);
 		break;
 		case K_STRING:
-	printf("n: 0x%x, key: %s color: %d, l: 0x%x, r: 0x%x p: 0x%x\n",
-		node,
+	printf("n: 0x%lx, key: %s color: %d, l: 0x%lx, r: 0x%lx p: 0x%lx\n",
+		(unsigned long)node,
 		node->key.key.s,
 		node->color,
-		node->left,
-		node->right,
-		node->parent);
+		(unsigned long)node->left,
+		(unsigned long)node->right,
+		(unsigned long)node->parent);
 		break;
 	}
 
