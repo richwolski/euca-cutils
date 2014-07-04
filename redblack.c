@@ -1178,7 +1178,7 @@ int RBTestPaths(RB *tree, int *black_count, int *status)
 		RBTestPaths(tree->left,&left_black,status);
 		if(*status == 0)
 		{
-			return;
+			return(0);
 		}
 		if(tree->color == RB_BLACK)
 		{
@@ -1202,7 +1202,7 @@ int RBTestPaths(RB *tree, int *black_count, int *status)
 		RBTestPaths(tree->right,&right_black,status);
 		if(*status == 0)
 		{
-			return;
+			return(0);
 		}
 		if(tree->color == RB_BLACK)
 		{
@@ -1220,7 +1220,7 @@ int RBTestPaths(RB *tree, int *black_count, int *status)
 	}
 
 
-	return;
+	return(0);
 
 }
 
