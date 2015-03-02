@@ -532,18 +532,14 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	if(Fname[0] == 0)
-	{
-		fprintf(stderr,"must specify file name\n");
-		fprintf(stderr,"%s",Usage);
-		exit(1);
-	}
-
-	fd = fopen(Fname,"r");
-	if(fd == NULL)
-	{
-		fprintf(stderr,"couldn't open %s\n",Fname);
-		exit(1);
+	if(Fname[0] == 0) {
+		fd = stdin;
+	} else {
+		fd = fopen(Fname,"r");
+		if(fd == NULL) {
+			fprintf(stderr,"couldn't open %s\n",Fname);
+			exit(1);
+		}
 	}
 
 	last_time = -1;
