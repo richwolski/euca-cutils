@@ -394,10 +394,21 @@ double ConvertTimeStringNew(char *ts)
 	int year;
 	int err;
 	struct tm t;
+	struct tm *now;
 	time_t utc;
 	double ret;
-
 	char *curr;
+	time_t tval;	/* for dylight savings time */
+	int dst;
+
+	tval = time(NULL);
+	now = localtime(&tval);
+	if(now != NULL) {
+		dst = now->tm_isdst;
+	} else {
+		dst = 0;
+	}
+	
 
 	curr = ts;
 
@@ -495,6 +506,7 @@ double ConvertTimeStringNew(char *ts)
 	t.tm_mon = mon;
 	t.tm_year = year - 1900;
 	t.tm_wday = day;
+	t.tm_isdst = dst;
 
 	utc = mktime(&t);
 	ret = (double)utc;
