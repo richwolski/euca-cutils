@@ -28,7 +28,7 @@ simple_input.test: simple_input.c simple_input.h
 redblackdebug.o: redblack.c hval.h redblack.h redblackdebug.h dlist.h
 	${CC} ${CFLAGS} -DDEBUG_RB -c redblack.c -o redblackdebug.o
 
-redblack.o: convert_time.c convert_time.h
+convert_time.o: convert_time.c convert_time.h
 	${CC} ${CFLAGS} -c convert_time.c
 
 dlist.o: dlist.h dlist.c
@@ -43,8 +43,8 @@ textlist.o: textlist.c textlist.h hval.h redblack.h redblack.o dlist.h dlist.o
 simple_input.o: simple_input.c simple_input.h
 	${CC} ${CFLAGS} -c simple_input.c
 
-libutils.a: textlist.o dlist.o redblack.o simple_input.o
-	ar -cr libutils.a textlist.o dlist.o redblack.o simple_input.o
+libutils.a: textlist.o dlist.o redblack.o simple_input.o convert_time.o
+	ar -cr libutils.a textlist.o dlist.o redblack.o simple_input.o convert_time.o
 
 install:
 	install -C -d -S libutils.a ${LIB_INSTALL}
