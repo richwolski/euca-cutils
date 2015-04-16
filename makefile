@@ -8,7 +8,7 @@ INC_INSTALL=../include
 all: redblack.test rb_string_test textlist.test simple_input.test convert_time ptime libutils.a
 
 convert_time: convert_time.c
-	${CC} ${CFLAGS} -o convert_time convert_time.c
+	${CC} ${CFLAGS} -DSTANDALONE -o convert_time convert_time.c
 
 ptime: ptime.c
 	${CC} ${CFLAGS} -o ptime ptime.c
@@ -27,6 +27,9 @@ simple_input.test: simple_input.c simple_input.h
 
 redblackdebug.o: redblack.c hval.h redblack.h redblackdebug.h dlist.h
 	${CC} ${CFLAGS} -DDEBUG_RB -c redblack.c -o redblackdebug.o
+
+redblack.o: convert_time.c convert_time.h
+	${CC} ${CFLAGS} -c convert_time.c
 
 dlist.o: dlist.h dlist.c
 	${CC} ${CFLAGS} -c dlist.c
