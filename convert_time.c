@@ -39,12 +39,6 @@ char Fname[255];
  * simple program for generating UTC from text time stamps
  */
 
-#define ARGS "f:D"
-
-char *Usage = "convert_time -f filename\n\
-\t-D\n";
-
-int Diff;
 
 int ConvertDay(char *ds)
 {
@@ -516,6 +510,12 @@ double ConvertTimeStringNew(char *ts)
 }
 
 #ifdef STANDALONE
+#define ARGS "f:D"
+
+char *Usage = "convert_time -f filename\n\
+\t-D\n";
+
+int Diff;
 	
 int main(int argc, char *argv[])
 {
