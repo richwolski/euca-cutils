@@ -38,6 +38,7 @@ union hval_un
 	double d;
 	void *v;
 	char *s;
+	unsigned long l;
 };
 
 typedef union hval_un Hval;
