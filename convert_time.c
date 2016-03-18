@@ -34,6 +34,7 @@
 
 char Line_buff[512];
 char Fname[255];
+int DST;
 
 /*
  * simple program for generating UTC from text time stamps
@@ -392,13 +393,17 @@ double ConvertTimeStringNew(char *ts)
 	time_t utc;
 	double ret;
 	char *curr;
-	time_t tval;	/* for dylight savings time */
+	time_t tval;	/* for daylight savings time */
 	int dst;
 
-	tval = time(NULL);
-	now = localtime(&tval);
-	if(now != NULL) {
-		dst = now->tm_isdst;
+	if(DST == 1) {
+		tval = time(NULL);
+		now = localtime(&tval);
+		if(now != NULL) {
+			dst = now->tm_isdst;
+		} else {
+			dst = 0;
+		}
 	} else {
 		dst = 0;
 	}
@@ -510,9 +515,10 @@ double ConvertTimeStringNew(char *ts)
 }
 
 #ifdef STANDALONE
-#define ARGS "f:D"
+#define ARGS "f:Dd"
 
 char *Usage = "convert_time -f filename\n\
+\t-d <disable daylight savings correction\n\
 \t-D\n";
 
 int Diff;
@@ -527,6 +533,8 @@ int main(int argc, char *argv[])
 	double dtime;
 	double last_time;
 
+	DST=1;
+
 	while((c = getopt(argc,argv,ARGS)) != EOF)
 	{
 		Diff = 0;
@@ -537,6 +545,9 @@ int main(int argc, char *argv[])
 				break;
 			case 'D':
 				Diff = 1;
+				break;
+			case 'd':
+				DST = 0;
 				break;
 			default:
 				fprintf(stderr,"unrecognized command %c\n",
