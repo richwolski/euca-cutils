@@ -155,7 +155,7 @@ Dlist *FindSubStr(TXL *tl, char *str)
 		/*
 		 * note that search is case sensitive
 		 */
-		found = strnstr(curr->value.s,str,strlen(curr->value.s));
+		found = strstr(curr->value.s,str);
 		if(found != NULL) {
 			DlistAppend(sslist,(Hval)(void *)curr);
 		}
