@@ -5,13 +5,16 @@ LIBS = -lm
 LIB_INSTALL=../lib
 INC_INSTALL=../include
 
-all: redblack.test rb_string_test textlist.test simple_input.test convert_time ptime libutils.a
+all: redblack.test rb_string_test textlist.test simple_input.test convert_time ptime aggr libutils.a
 
 convert_time: convert_time.c
 	${CC} ${CFLAGS} -DSTANDALONE -o convert_time convert_time.c
 
 ptime: ptime.c
 	${CC} ${CFLAGS} -o ptime ptime.c
+
+aggr: aggr.c simple_input.h simple_input.o
+	${CC} ${CFLAGS} -o aggr aggr.c simple_input.o
 
 redblack.test: redblack.c redblack.h dlist.h dlist.o hval.h
 	${CC} ${CFLAGS} -DTEST -DDEBUG_RB -o redblack.test redblack.c dlist.o
