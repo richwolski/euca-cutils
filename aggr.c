@@ -204,10 +204,18 @@ AvgByCount(double ts,
 		if((size - read) < (tau-1))
 		{
 			acc += curr_val;
+/*
+printf("%f ",curr_val);
+*/
 			count += 1;
 		}
 	}
 	
+/*
+printf("%f ",input_val);
+printf(" | ");
+*/
+
 	*out_val = acc / count;
 	
 	Rewind(state_set);
@@ -270,6 +278,8 @@ char *argv[];
 	int ierr;
 	void *input_data;
 	void *agg_data;
+	void *agg_data_O;
+	void *new_data;
 	double out_ts;
 	double out_val;
 	double value;
@@ -278,6 +288,8 @@ char *argv[];
 	double last_ts;
 	int fcount;
 	double *values;
+	double *Ovalues;
+	int total;
 
 	if(argc < 2)
 	{
@@ -366,6 +378,14 @@ char *argv[];
 		FreeDataSet(input_data);
 		exit(1);
 	}
+	ierr = InitDataSet(&agg_data_O,2);
+	if(ierr <= 0)
+	{
+		fprintf(stderr,"%s",Usage);
+		fflush(stderr);
+		FreeDataSet(input_data);
+		exit(1);
+	}
 
 	count_since_last = 0;
 	last_ts = 0.0;
@@ -374,9 +394,16 @@ char *argv[];
 	if(values <= 0) {
 		exit(1);
 	}
+
+	Ovalues = (double *)malloc(2 * sizeof(double));
+	if(Ovalues <= 0) {
+		exit(1);
+	}
 	
+	total = 0;
 	while(ReadData(input_data,fcount,values) != 0)
 	{
+		total += 1;
 		if(fcount < 2) {
 			ts = values[0];
 			value = values[0];
@@ -390,12 +417,21 @@ char *argv[];
 			{
 				if(Agg == 0)
 				{
-				ierr = AvgByCount(ts,
-						  value,
-						  agg_data,
-						  Tau,
-						  &out_ts,
-						  &out_val);
+					if(Overlap == 0) {
+					ierr = AvgByCount(ts,
+							  value,
+							  agg_data,
+							  Tau,
+							  &out_ts,
+							  &out_val);
+					} else {
+					ierr = AvgByCount(ts,
+							  value,
+							  agg_data_O,
+							  Tau,
+							  &out_ts,
+							  &out_val);
+					}
 				}
 				else
 				{
@@ -489,7 +525,54 @@ char *argv[];
 			}
 		}	
 
-		ierr = WriteEntry(agg_data,ts,value);
+		if(Overlap == 0) {
+			ierr = WriteEntry(agg_data,ts,value);
+		} else {
+			/*
+			 * wait until we see enough
+			 */
+			if(total <= Tau) {
+				while(ReadData(agg_data_O,2,Ovalues));
+				Ovalues[0] = ts;
+				Ovalues[1] = value;
+				ierr = WriteData(agg_data_O,2,Ovalues);
+				if(ierr <= 0) {
+					exit(1);
+				}
+				continue;
+			}
+			ierr = InitDataSet(&new_data,2);
+			if(ierr <= 0) {
+				exit(1);
+			}
+			/*
+			 * read the first one and throw it away
+			 */
+			Rewind(agg_data_O);
+			ierr = ReadData(agg_data_O,2,Ovalues);
+			if(ierr <= 0) {
+				if(ierr <= 0) {
+					exit(1);
+				}
+			}
+			while(ReadData(agg_data_O,2,Ovalues) != 0) {
+				ierr = WriteData(new_data,2,Ovalues);
+				if(ierr <= 0) {
+					exit(1);
+				}
+			}
+			/*
+			 * add the current one to the end
+			 */
+			Ovalues[0] = ts;
+			Ovalues[1] = value;
+			ierr = WriteData(new_data,2,Ovalues);
+			if(ierr <= 0) {
+				exit(1);
+			}
+			FreeDataSet(agg_data_O);
+			agg_data_O = new_data;
+		}
 		if(ierr == 0)
 		{
 			fprintf(stderr,
@@ -507,6 +590,7 @@ char *argv[];
 	free(values);
 	FreeDataSet(input_data);
 	FreeDataSet(agg_data);
+	FreeDataSet(agg_data_O);
 	exit(0);
 	
 }
