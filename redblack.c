@@ -1378,7 +1378,7 @@ int main(int argc, char *argv[])
 		r = drand48();
 		printf("inserting: %f\n",r);
 		RBInsertD(tree,r,(Hval)0);
-		RBPrintTree(tree);
+//		RBPrintTree(tree);
 		status = RBTestGPs(tree);
 		if(status == 0)
 		{
