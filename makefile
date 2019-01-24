@@ -57,5 +57,5 @@ install:
 	install -C -d -S textlist.h ${INC_INSTALL}
 
 clean:
-	rm -f *.o *.test
+	rm -f *.o *.test *.a
 
