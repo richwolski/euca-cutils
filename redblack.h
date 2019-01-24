@@ -87,6 +87,13 @@ RB *RBFindI(RB *rb, int ikey);
 void RBInsertI(RB *rb, int ikey, Hval value);
 #define K_I(k) ((k).key.i)
 
+RB *RBInitI64();
+void RBDestroyI64(RB *rb);
+void RBDeleteI64(RB *rb, RB *node);
+RB *RBFindI64(RB *rb, int64_t ikey);
+void RBInsertI64(RB *rb, int64_t ikey, Hval value);
+#define K_I64(k) ((k).key.i64)
+
 RB *RBInitS();
 void RBDestroyS(RB *rb);
 void RBDeleteS(RB *rb, RB *node);
