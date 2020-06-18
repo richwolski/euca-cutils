@@ -31,18 +31,17 @@
 */
 #ifndef HVAL_H
 #define HVAL_H
+#include <stdint.h>
 
-union hval_un
-{
-	int i;
-	int64_t i64;
-	double d;
-	void *v;
-	char *s;
-	unsigned long l;
+union hval_un {
+  int i;
+  int64_t i64;
+  double d;
+  void *v;
+  char *s;
+  unsigned long l;
 };
 
 typedef union hval_un Hval;
 
 #endif
-
