@@ -514,6 +514,15 @@ double ConvertTimeStringNew(char *ts)
 
 }
 
+double ConvertTimeString(char *ts)
+{
+	if(isalpha(ts[1])) {
+	 return(ConvertTimeStringOld(ts));
+	} else {
+	 return(ConvertTimeStringNew(ts));
+	}
+}
+
 #ifdef STANDALONE
 #define ARGS "f:Dd"
 
