@@ -31,6 +31,9 @@
 #include <string.h>
 #include <time.h>
 #include <ctype.h>
+#ifdef __APPLE__
+#include <wctype.h>
+#endif
 
 char Line_buff[512];
 char Fname[255];

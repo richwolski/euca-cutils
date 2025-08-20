@@ -5,7 +5,7 @@ LIBS = -lm
 LIB_INSTALL=../lib
 INC_INSTALL=../include
 
-all: redblack.test rb_string_test textlist.test simple_input.test convert_time ptime aggr libutils.a
+all: redblack.test rb_string_test textlist.test simple_input.test convert_time ptime aggr time_join libutils.a
 
 convert_time: convert_time.c
 	${CC} ${CFLAGS} -DSTANDALONE -o convert_time convert_time.c
@@ -33,6 +33,9 @@ redblackdebug.o: redblack.c hval.h redblack.h redblackdebug.h dlist.h
 
 convert_time.o: convert_time.c convert_time.h
 	${CC} ${CFLAGS} -c convert_time.c
+
+time_join: simple_input.o simple_input.h time_join.c
+	${CC} ${CFLAGS} -DTEST -o time_join time_join.c simple_input.o
 
 dlist.o: dlist.h dlist.c
 	${CC} ${CFLAGS} -c dlist.c

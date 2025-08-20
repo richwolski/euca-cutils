@@ -110,6 +110,7 @@ void RBInsertS(RB *rb, char *skey, Hval value);
 #define RB_BACKWARD(tree,curr)\
   for((curr)=RB_LAST(tree); (curr) != NULL; (curr) = (curr)->prev)
 
+int CompareKeyType(KEY_t op1, KEY_t op2);
 
 #endif
 
