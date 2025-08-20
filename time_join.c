@@ -70,6 +70,18 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
+	err_p = LoadDataSet(Primary,prim);
+	if(err_p <= 0) {
+		fprintf(stderr,"could not load from %s\n",Primary);
+		exit(1);
+	}
+
+	err = LoadDataSet(Secondary,sec);
+	if(err <= 0) {
+		fprintf(stderr,"could not load from %s\n",Secondary);
+		exit(1);
+	}
+
 	v_p = (double *)malloc(fc_p*sizeof(double));
 	if(v_p == NULL) {
 		exit(1);
@@ -81,12 +93,12 @@ int main(int argc, char **argv)
 	}
 
 	err_p = ReadData(prim,fc_p,v_p);
-	if(err < 0) {
+	if(err_p <= 0) {
 		fprintf(stderr,"could not read first entry from %s\n",Primary);
 		exit(1);
 	}
 	err = ReadData(sec,fc_s,v_s);
-	if(err < 0) {
+	if(err <= 0) {
 		fprintf(stderr,"could not read first entry from %s\n",Secondary);
 		exit(1);
 	}
@@ -95,11 +107,11 @@ int main(int argc, char **argv)
 		// find the secondary immediately after the primary
 		while(v_s[0] < v_p[0]) {
 			err = ReadData(sec,fc_s,v_s);
-			if(err < 0) {
+			if(err <= 0) {
 				break;
 			}
 		}
-		if(err < 0) {
+		if(err <= 0) {
 			break;
 		}
 		printf("%10.0f ",v_p[0]);
@@ -113,12 +125,12 @@ int main(int argc, char **argv)
 		fflush(stdout);
 		// advance primary until it is past the current secondary
 		err_p = ReadData(prim,fc_p,v_p);
-		if(err_p < 0) {
+		if(err_p <= 0) {
 			break;
 		}
 		while(v_p[0] < v_s[0]) {
 			err_p = ReadData(prim,fc_p,v_p);
-			if(err_p < 0) {
+			if(err_p <= 0) {
 				break;
 			}
 		}
