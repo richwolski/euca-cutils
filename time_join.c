@@ -191,6 +191,7 @@ int main(int argc, char **argv)
 
 	free(v_p);
 	free(v_s);
+	free(last_s);
 	exit(1);
 }
 
