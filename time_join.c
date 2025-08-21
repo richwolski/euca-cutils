@@ -6,10 +6,15 @@
 #include "simple_input.h"
 char Primary[1024];
 char Secondary[1024];
+int Verbose;
+int Predecessor;
 
-#define ARGS "x:y:"
+#define ARGS "x:y:pV"
 
-char *Usage = "time_join -x primary-file, -y secondary-file\n";
+char *Usage = "time_join -x primary-file\n\
+\t-y secondary-file\n\
+\t-p <use nearest predecessor>\n\
+\t-V <enable verbose mode>\n";
 
 //
 // joins the secondary record that occurs soonest after primary
@@ -30,6 +35,7 @@ int main(int argc, char **argv)
 	void *sec;
 	double *v_p;
 	double *v_s;
+	double *last_s;
 	int i;
 
 	while((c = getopt(argc,argv,ARGS)) != EOF) {
@@ -40,12 +46,29 @@ int main(int argc, char **argv)
 			case 'y':
 				strncpy(Secondary,optarg,sizeof(Secondary));
 				break;
+			case 'p':
+				Predecessor = 1;
+				break;
+			case 'V':
+				Verbose = 1;
+				break;
 			default:
 				fprintf(stderr,
 					"unrecognized command %c\n",(char)c);
 				fprintf(stderr,"usage: %s",Usage);
 				exit(1);
 		}
+	}
+
+	if(Primary[0] == 0) {
+		fprintf(stderr,"must specify primary file\n");
+		fprintf(stderr,"%s",Usage);
+		exit(1);
+	}
+	if(Secondary[0] == 0) {
+		fprintf(stderr,"must specify secondary file\n");
+		fprintf(stderr,"%s",Usage);
+		exit(1);
 	}
 
 	fc_p = GetFieldCount(Primary);
@@ -92,6 +115,11 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
+	last_s = (double *)malloc(fc_s*sizeof(double));
+	if(last_s == NULL) {
+		exit(1);
+	}
+
 	err_p = ReadData(prim,fc_p,v_p);
 	if(err_p <= 0) {
 		fprintf(stderr,"could not read first entry from %s\n",Primary);
@@ -106,6 +134,7 @@ int main(int argc, char **argv)
 	while(err_p > 0) {
 		// find the secondary immediately after the primary
 		while(v_s[0] < v_p[0]) {
+			memcpy(last_s,v_s,fc_s*sizeof(double));
 			err = ReadData(sec,fc_s,v_s);
 			if(err <= 0) {
 				break;
@@ -118,10 +147,34 @@ int main(int argc, char **argv)
 		for(i=1; i < fc_p; i++) {
 			printf("%f ",v_p[i]);
 		}
-		for(i=1; i < (fc_s-1); i++) {
-			printf("%f ",v_s[i]);
+		if(Predecessor == 0) {
+			for(i=1; i < (fc_s-1); i++) {
+				printf("%f ",v_s[i]);
+			}
+		} else {
+			for(i=1; i < (fc_s-1); i++) {
+				printf("%f ",last_s[i]);
+			}
 		}
-		printf("%f\n",v_s[fc_s-1]);
+		if(Verbose == 0) {
+			if(Predecessor == 0) {
+				printf("%f\n",v_s[fc_s-1]);
+			} else {
+				printf("%f\n",last_s[fc_s-1]);
+			}
+		} else {
+			if(Predecessor == 0) {
+				printf("%f | ", v_s[fc_s-1]);
+				printf("ts: %10.0f ",v_s[0]);
+				printf("ts_diff: %f\n",
+					v_s[0] - v_p[0]);
+			} else {
+				printf("%f | ", last_s[fc_s-1]);
+				printf("ts: %10.0f ",last_s[0]);
+				printf("ts_diff: %f\n",
+					v_p[0] - last_s[0]);
+			}
+		}
 		fflush(stdout);
 		// advance primary until it is past the current secondary
 		err_p = ReadData(prim,fc_p,v_p);
